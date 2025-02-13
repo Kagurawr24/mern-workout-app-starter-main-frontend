@@ -1,6 +1,6 @@
 import { createContext, useReducer } from "react";
 
-export const WorkoutContext = createContext();
+export const WorkoutsContext = createContext();
 
 export const workoutReducer = (state, action) => {
   switch (action.type) {
@@ -10,7 +10,7 @@ export const workoutReducer = (state, action) => {
       };
     case "CREATE_WORKOUT":
       return {
-        workouts: [action.payload, ...state.workouts],
+        workouts: [action.payload, ...(state.workouts || [])],  
       };
     case "DELETE_WORKOUT":
       return {
@@ -29,8 +29,8 @@ export const WorkoutContextProvider = ({ children }) => {
   // children are the components that are inside the provider
   // value is available to all the children components
   return (
-    <WorkoutContext.Provider value={{ ...state, dispatch }}>
+    <WorkoutsContext.Provider value={{ ...state, dispatch }}>
       {children}
-    </WorkoutContext.Provider>
+    </WorkoutsContext.Provider>
   );
 };

@@ -1,24 +1,39 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthContextProvider } from './context/AuthContext'; // Import the provider
+import { useAuthContext } from "./hooks/useAuthContext";  // Import the hook
 
-// pages & components
-import Home from './pages/Home';
-import NavBar from './components/NavBar';
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Navbar from "./components/NavBar";
 
 function App() {
+  const { user } = useAuthContext();
+
   return (
-    <div className="App">
-      <BrowserRouter>
-      <NavBar />
-      <div className="pages">
-        <Routes>
-          <Route
-            path="/"
-            element={<Home />}
-          />
-        </Routes>
+    <AuthContextProvider> {/* Wrap your app with the AuthContextProvider */}
+      <div className="App">
+        <BrowserRouter>
+          <Navbar />
+          <div className="pages">
+            <Routes>
+              <Route
+                path="/"
+                element={user ? <Home /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/login"
+                element={!user ? <Login /> : <Navigate to="/" />}
+              />
+              <Route
+                path="/signup"
+                element={!user ? <Signup /> : <Navigate to="/" />}
+              />
+            </Routes>
+          </div>
+        </BrowserRouter>
       </div>
-      </BrowserRouter>
-    </div>
+    </AuthContextProvider>
   );
 }
 
